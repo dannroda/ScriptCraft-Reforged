@@ -124,3 +124,6 @@ buildNumber.properties
 
 # Common working directory
 run/
+
+# Temp files
+src/tmp
