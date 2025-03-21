@@ -10,14 +10,14 @@ The original work is from Walter Higgins and you can find the [repo here](https:
 The [original README](README_original.md) was renamed so this one can be use kinda of a tracker of things I want to address. I got it working on Spigot 1.20 and later with stock JDK 21, but the build system is kinda messy.
 
 ## TODO
-- [] Cleanup old files
-- [] Remove obsolete CanaryMod code
-- [] Improve setTimeout implementation (possible memory issues)
-- [] Finish removing obsolete Ant's build-system in favor of Maven,
-- [] Update documentation of plugin usage to address Graal
-- [] Fix ScriptCraft documentation generation
-- [] Documentation website?
-- [] Explore splitting ScriptCraft into plugin wrapper and ScriptCraft itself (this can maybe expand the possibility to add more languages like python)
-- [] Make use of Github's CI/CD to build releases
-- [] Replace setTimeout workaround with [task-bukkit](src/main/js/lib/task-bukkit.js) 
-- [] Improve converting JSFiles to String due to GraalJS only accepting Strings instead of FileStreams
+- [ ] Cleanup old files
+- [ ] Remove obsolete CanaryMod code
+- [ ] Improve setTimeout implementation (possible memory issues)
+- [ ] Finish removing obsolete Ant's build-system in favor of Maven,
+- [ ] Update documentation of plugin usage to address Graal
+- [ ] Fix ScriptCraft documentation generation
+- [ ] Documentation website?
+- [ ] Explore splitting ScriptCraft into plugin wrapper and ScriptCraft itself (this can maybe expand the possibility to add more languages like python)
+- [ ] Make use of GitHub's CI/CD to build releases
+- [ ] Replace setTimeout workaround with [task-bukkit](src/main/js/lib/task-bukkit.js) 
+- [ ] Improve converting JSFiles to String due to GraalJS only accepting Strings instead of FileStreams
