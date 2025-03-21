@@ -44,7 +44,6 @@ exports.on = function(
 
   // Create an instance of our empty Listener implementation to track the handler
   var listener = new ScriptCraftListener();
-
   bkPluginManager.registerEvent(
     eventType.class,
     listener,

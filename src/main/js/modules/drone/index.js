@@ -2,6 +2,7 @@
 /*global __plugin, require, org, setTimeout, addUnloadHandler, global, Packages, server, module*/
 var utils = require('utils'),
   blocks = require('blocks'),
+  setTimeout = __plugin.setTimeout,
   THOUSAND = 1000,
   MILLION = THOUSAND * THOUSAND;
 
@@ -346,7 +347,8 @@ function makeTypeIdAndDataSetter() {
     };
   } else {
     try {
-      var CraftEvil = Java.type(server.class.package.name + '.util.CraftEvil');
+      // https://github.com/walterhiggins/ScriptCraft/issues/447
+      var CraftEvil = Java.type(server.class.package.name + '.legacy.CraftEvil');
       console.log('Drone using CraftEvil.setTypeIdAndData method');
       return function(block, typeId, data, applyPhysics) {
         CraftEvil.setTypeIdAndData(block, typeId, data, applyPhysics);
@@ -371,7 +373,7 @@ function putBlock(x, y, z, blockId, metadata, world, update) {
   if (typeof metadata == 'undefined') {
     metadata = 0;
   }
-  var block = world.getBlockAt(x, y, z);
+  var block = world.getBlockAt(parseInt(x), parseInt(y), parseInt(z));
 
   if (__plugin.canary) {
     var BlockType = Packages.net.canarymod.api.world.blocks.BlockType;
@@ -386,7 +388,7 @@ function putBlock(x, y, z, blockId, metadata, world, update) {
     }
   }
   if (__plugin.bukkit) {
-    setTypeIdAndData(block, blockId, metadata, update);
+    setTypeIdAndData(block, blockId, metadata, !!update);
   }
   return block;
 }

@@ -57,9 +57,10 @@ names.forEach(function(name) {
     name = name.replace(/\//g, '.').replace('.class', '');
     try {
       clz = java.lang.Class.forName(name);
+
     } catch (e) {
       err.println('Warning: could not Class.forName("' + name + '")');
-      clz = engine.eval(name);
+      clz = engine.eval("js",name);
     }
     var isAbstract = Modifier.isAbstract(clz.getModifiers());
     if (isAbstract) {

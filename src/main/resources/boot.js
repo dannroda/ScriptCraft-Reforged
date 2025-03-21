@@ -4,7 +4,6 @@
 var __scboot = null;
 (function() {
   var File = java.io.File,
-    FileReader = java.io.FileReader,
     FileOutputStream = java.io.FileOutputStream,
     ZipInputStream = java.util.zip.ZipInputStream,
     //jsPlugins = new File('plugins/scriptcraft'),
@@ -56,7 +55,7 @@ var __scboot = null;
   /*
     Called from Java plugin
   */
-  __scboot = function(plugin, engine, classLoader) {
+  __scboot = function(plugin, engine) {
     var logger = plugin.canary ? plugin.logman : plugin.logger,
       initScriptFile = new File(jsPlugins, initScript),
       zips = ['lib', 'plugins', 'modules'],
@@ -75,23 +74,19 @@ var __scboot = null;
     }
 
     for (i = 0; i < len; i++) {
-      if (plugin.canary) {
-        zis = new ZipInputStream(
-          classLoader.getResourceAsStream(zips[i] + '.zip')
-        );
-        unzip(zis, logger);
-      } else {
-        if (plugin.config.getBoolean('extract-js.' + zips[i])) {
+
+        if (plugin.getConfig().getBoolean('extract-js.' + zips[i])) {
           zis = new ZipInputStream(plugin.getResource(zips[i] + '.zip'));
           unzip(zis, logger);
         }
-      }
+
     }
     if (plugin.bukkit) {
       plugin.saveDefaultConfig();
     }
     try {
-      engine.eval(new FileReader(initScriptFile));
+      var initScriptBuffer = plugin.convertJsFileToString(initScriptFile);
+      engine.eval("js", initScriptBuffer);
       __onEnable(engine, plugin, initScriptFile);
     } catch (e) {
       var msg = 'Error evaluating ' + initScriptFile + ': ' + e;

@@ -1,6 +1,7 @@
 'use strict';
 /*global setTimeout, exports, require*/
-var File = java.io.File;
+var File = java.io.File,
+  setTimeout = __plugin.setTimeout;
 /************************************************************************
 ## The watcher Module
 
