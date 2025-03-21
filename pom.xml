@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ar.dann</groupId>
+    <artifactId>scriptcraft-reforged</artifactId>
+    <version>0.1-${spigot.version}</version>
+    <packaging>jar</packaging>
+
+    <name>scriptcraft-reforged</name>
+
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <graaljs.version>24.1.2</graaljs.version>
+        <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
+        <spigot.api.version>1.20.1-R0.1-SNAPSHOT</spigot.api.version>
+        <build>target/classes</build>
+        <dist>target</dist>
+        <minecraft.dir>${dist}/minecraft</minecraft.dir>
+        <js-plugins-dir>scriptcraft</js-plugins-dir>
+        <http.agent>'Walter'</http.agent>
+        <lib.bukkit>${basedir}/libs/spigot-api-1.20.1-R0.1-SNAPSHOT-shaded.jar</lib.bukkit>
+    </properties>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.ar.dann.scriptCraft.ScriptCraftPlugin</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${dist}/js/lib/" />
+
+                                <ant antfile="build.xml">
+                                    <!--                                    <target name="compile-docs"/>-->
+                                    <target name="zip_js"/>
+                                </ant>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>gen-events-helper-bukkit</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <outputFile>${basedir}/${dist}/js/lib/events-helper-bukkit.js</outputFile>
+                            <classpathScope>provided</classpathScope>
+
+                            <arguments>
+                                <argument>-XX:+UnlockExperimentalVMOptions</argument>
+                                <argument>-XX:+EnableJVMCI</argument>
+                                <argument>-Dpolyglot.engine.WarnInterpreterOnly=false</argument>
+                                <argument>-classpath</argument>
+                                <classpath />
+                                <argument>${basedir}/src/docs/java/jscript_orig.java</argument>
+                                <argument>${basedir}/src/docs/js/generateEventsHelper.js</argument>
+                                <argument>SpigotMC</argument>
+                                <argument>${lib.bukkit}</argument>
+                                <argument>blockBreak</argument>
+                                <argument>org.bukkit.event.block.BlockBreakEvent</argument>
+                                <argument>${basedir}/${dist}/gen-events-bukkit-error.log</argument>
+                            </arguments>
+
+                        </configuration>
+
+                    </execution>
+                </executions>
+
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+            <version>${spigot.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>polyglot</artifactId>
+            <version>${graaljs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js-scriptengine</artifactId>
+            <version>${graaljs.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>js</artifactId>
+            <version>${graaljs.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
+    </dependencies>
+</project>
