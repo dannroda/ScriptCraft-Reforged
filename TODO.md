@@ -1,0 +1,12 @@
+## TODO
+- [ ] Cleanup old files
+- [ ] Remove obsolete CanaryMod code
+- [ ] Improve setTimeout implementation (possible memory issues)
+- [ ] Finish removing obsolete Ant's build-system in favor of Maven,
+- [ ] Update documentation of plugin usage to address Graal
+- [ ] Fix ScriptCraft documentation generation
+- [ ] Documentation website?
+- [ ] Explore splitting ScriptCraft into plugin wrapper and ScriptCraft itself (this can maybe expand the possibility to add more languages like python)
+- [ ] Make use of GitHub's CI/CD to build releases
+- [ ] Replace setTimeout workaround with [task-bukkit](src/main/js/lib/task-bukkit.js)
+- [ ] Improve converting JSFiles to String due to GraalJS only accepting Strings instead of FileStreams
